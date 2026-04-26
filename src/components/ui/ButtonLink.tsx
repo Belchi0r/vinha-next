@@ -1,14 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import type { AnchorHTMLAttributes, ReactNode } from "react";
+import type {
+  HTMLAttributeAnchorTarget,
+  MouseEventHandler,
+  ReactNode,
+} from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/src/lib/utils";
 
-type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
+type ButtonLinkProps = {
   href: string;
   children: ReactNode;
   variant?: "primary" | "secondary" | "ghost" | "light" | "glass";
+  className?: string;
+  id?: string;
+  title?: string;
+  target?: HTMLAttributeAnchorTarget;
+  rel?: string;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
+  "aria-label"?: string;
 };
 
 const variants = {
@@ -31,7 +42,12 @@ export function ButtonLink({
   children,
   className,
   variant = "primary",
-  ...props
+  id,
+  title,
+  target,
+  rel,
+  onClick,
+  "aria-label": ariaLabel,
 }: ButtonLinkProps) {
   const isExternal = href.startsWith("http");
   const shouldReduceMotion = useReducedMotion();
@@ -47,12 +63,15 @@ export function ButtonLink({
       <motion.a
         href={href}
         className={classes}
-        target="_blank"
-        rel="noreferrer"
+        id={id}
+        title={title}
+        aria-label={ariaLabel}
+        target={target ?? "_blank"}
+        rel={rel ?? "noreferrer"}
+        onClick={onClick}
         whileHover={shouldReduceMotion ? undefined : { y: -2 }}
         whileTap={shouldReduceMotion ? undefined : { scale: 0.985 }}
         transition={{ duration: 0.24, ease: "easeOut" }}
-        {...props}
       >
         <span className="premium-shine" />
         <span className="relative z-10">{children}</span>
@@ -64,10 +83,13 @@ export function ButtonLink({
     <MotionLink
       href={href}
       className={classes}
+      id={id}
+      title={title}
+      aria-label={ariaLabel}
+      onClick={onClick}
       whileHover={shouldReduceMotion ? undefined : { y: -2 }}
       whileTap={shouldReduceMotion ? undefined : { scale: 0.985 }}
       transition={{ duration: 0.24, ease: "easeOut" }}
-      {...props}
     >
       <span className="premium-shine" />
       <span className="relative z-10">{children}</span>
